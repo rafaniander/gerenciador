@@ -11,24 +11,17 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @WebFilter(urlPatterns = "/*")
 public class FiltroDeAuditoria implements Filter {
 	
-	private Cookie getUsuario(HttpServletRequest req) {
-
-	    Cookie[] cookies = req.getCookies();
-
-	    if (cookies == null)
-	        return null;
-
-	    for (Cookie cookie : cookies) {
-	        if (cookie.getName().equals("usuario.logado")) {
-	            return cookie;
-	        }
-	    }
-
-	    return null;
+	private String getUsuario(HttpServletRequest req, HttpServletResponse resp) {
+		Cookie cookie = new Cookies(req.getCookies()).buscaUsuarioLogado();	
+		if (cookie == null) return "<deslogado>";	
+		cookie.setMaxAge(10 * 60);		
+		System.out.println("Tempo cookie: " + cookie.getMaxAge());
+		return cookie.getValue();	    
 	}
 
 	@Override
@@ -37,14 +30,13 @@ public class FiltroDeAuditoria implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)	throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
+		HttpServletRequest req = (HttpServletRequest) request;		
+		HttpServletResponse resp = (HttpServletResponse) response;		
 		
-		Cookie cookie = getUsuario(req);
-	    String usuario = "<deslogado>";
-
-	    if (cookie != null) usuario = cookie.getValue();
+		String uri = req.getRequestURI();			
+	    String usuario = getUsuario(req, resp);	    
 	    
-		String uri = req.getRequestURI();
+		
 		System.out.println("O usuário " + usuario +  " está acessando a URI: " + uri);
 		chain.doFilter(request, response);		
 	}
