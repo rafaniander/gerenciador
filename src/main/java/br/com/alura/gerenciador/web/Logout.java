@@ -9,22 +9,18 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet(urlPatterns = "/logout")
 public class Logout extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		 Cookie cookie = new Cookies(req.getCookies()).buscaUsuarioLogado();
-		 PrintWriter writer = resp.getWriter();
-		 if (cookie == null) {
-			 writer.println("<html><body>Usuário não estava logado!</body></html>");
-			 return;
-		 }
-		 cookie.setMaxAge(0);
-		 resp.addCookie(cookie);
-		 
-		 writer.println("<html><body>Deslogado com sucesso!</body></html>");
+		HttpSession session = req.getSession();
+		session.removeAttribute("usuario.logado");
+		
+		PrintWriter writer = resp.getWriter();
+		writer.println("<html><body>Deslogado com sucesso!</body></html>");
 	}
 	
 }
