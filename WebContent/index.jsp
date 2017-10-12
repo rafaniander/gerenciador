@@ -7,20 +7,20 @@
 			Logado como ${usuarioLogado.email} <br/>
 		</c:if>
 		
-		<form action="fazTudo" method="post">						
+		<form action="executa" method="post">						
 			Nome: <input type="text" name="nome">
 			<input type="hidden" name="tarefa" value="NovaEmpresa" />
 			<input type="submit" value="Enviar">
 		</form>
 		
-		<form action="fazTudo" method="post">
+		<form action="executa" method="post">
     		Email: <input type="text" name="email" />
     		Senha: <input type="password" name="senha" />
     		<input type="hidden" name="tarefa" value="Login" />	
     		<input type="submit" value="Login" />
 		</form>
 		
-		<form action="fazTudo" method="post">
+		<form action="executa" method="post">
 			<input type="hidden" name="tarefa" value="Logout" />    			
     		<input type="submit" value="Deslogar" />
 		</form>
